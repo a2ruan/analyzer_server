@@ -6,5 +6,8 @@ Features
 2. Automated log data parsing and unit test reports
 3. Ultra-fast text recognition algorithm capable of parsing 40k+ lines/s (10x faster than conventional fuzzy matching)
 
+# Demo
+![](https://github.com/a2ruan/analyzer_server/blob/main/templates/images/report_demo.gif)
+
 # Architecture
 ![Architecture Diagram](https://github.com/a2ruan/analyzer_server/blob/main/templates/images/system_architecture_diagram.PNG)
