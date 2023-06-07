@@ -1,5 +1,7 @@
-# analyzer_server
-Python based analyzer webserver for automated log parsing.  Powered using Python FastAPI and Bootstrap.
+# Analyzer Server
+This is a python webserver capable of automatically generating reports from test data via text recognition.  
+This application is designed to function as a scalable data processing microservice.  
+Powered using Python FastAPI and Bootstrap.
 
 # Features
 1. Automated report generation when connected to test database
