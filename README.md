@@ -10,6 +10,9 @@ Powered using Python FastAPI and Bootstrap.
 4. Scalable architecture that is deployable via EC2.  Multiple nodes can be run concurrently, and requires a load balancer.
 
 # Demo
+The following demo shows the webservice pulling data from a database, performing textual analysis from logs, then writing the results back to a results database.  
+Finally, the results are shown graphically via a webpage for front-end users. 
+Any new entries into the source database will be queued for analysis, and processed when the server is idle.
 ![](https://github.com/a2ruan/analyzer_server/blob/main/templates/images/report_demo.gif)
 
 # Architecture
