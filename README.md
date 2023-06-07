@@ -1,10 +1,11 @@
 # analyzer_server
-Python based analyzer server for automated log parsing.  Powered using Python FastAPI and Bootstrap.
+Python based analyzer webserver for automated log parsing.  Powered using Python FastAPI and Bootstrap.
 
 # Features
 1. Automated report generation when connected to test database
 2. Automated log data parsing and unit test reports
 3. Ultra-fast text recognition algorithm capable of parsing 40k+ lines/s (10x faster than conventional fuzzy matching)
+4. Scalable architecture that is deployable via EC2.  Multiple nodes can be run concurrently, and requires a load balancer.
 
 # Demo
 ![](https://github.com/a2ruan/analyzer_server/blob/main/templates/images/report_demo.gif)
@@ -12,7 +13,18 @@ Python based analyzer server for automated log parsing.  Powered using Python Fa
 # Architecture
 ![Architecture Diagram](https://github.com/a2ruan/analyzer_server/blob/main/templates/images/system_architecture_diagram.PNG)
 
-# How to use
+# Setup
+Step 1: Install all requirements (requires python 3.10+)
+```
+pip install -r requirements.txt
+```
+
+Step 2: Click on the batch file start_server.bat to start the wsgi server.
+```
+start cmd.exe /k start_server.bat
+```
+
+# How to generate custom reports
 ## Analyzers
 An analyzer is a python file with a single class named "Analyzer".  The analyzer class will have the following reserved keywords, that are injected into the Analyzer when the class is initialized: 
 
