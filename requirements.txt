@@ -1,0 +1,8 @@
+uvicorn
+fastapi
+rapidfuzz
+file-read-backwards
+starlette
+psycopg2
+sqlalchemy
+asyncio

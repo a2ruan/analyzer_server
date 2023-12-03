@@ -1,0 +1,208 @@
+{% extends "bootstrap_base.html" %}
+
+{% block content %}
+
+<!--{{comparison.firmware_comparison}}-->
+
+<style>
+  .body {
+    margin-left:10px !important;
+  }
+  .set_yellow {
+    background:yellow !important;
+  }
+  .set_gray {
+    background:lightgray !important;
+  }
+  .set_header {
+    background:#9cc2e5 !important;
+  }
+  .td {
+    min-width:150px !important;
+  }
+  
+
+  
+</style>
+
+
+
+<br>
+<div class="row throttle" id="fadein1">
+
+
+  <br>
+  <div class="alert alert-secondary" style="width:50%;" role="alert">
+    REST API Format: http://{ip}:{port}/api/compare/{previous_stack_uuid}/{current_stack_uuid}
+  </div>
+<br>
+  
+  {% if comparison.test_case_info.metadata.stack_score <= 60%}
+<h2>Stack Quality Score: <span class="badge bg-danger ">{{comparison.test_case_info.metadata.stack_score}}%</span></h2>
+{% elif comparison.test_case_info.metadata.stack_score <= 85%}
+<h2>Stack Quality Score: <span class="badge bg-warning ">{{comparison.test_case_info.metadata.stack_score}}%</span></h2>
+{% elif comparison.test_case_info.metadata.stack_score <= 101%}
+<h2>Stack Quality Score: <span class="badge bg-success ">{{comparison.test_case_info.metadata.stack_score}}%</span></h2>
+{% else %}
+<h2>Stack Quality Score: <span class="badge bg-primary ">{{comparison.test_case_info.metadata.stack_score}}%</span></h2>
+{% endif %}
+<br>
+  <br><br><h4>Stack Information</h4>
+  <table id="example" class="table table-sm display table-bordered" style="width:auto">
+  
+  <tr class="set_header">
+    <th>Component</th>
+    <th><center>Previous Stack</center></th>
+    <th><center>Current Stack</center></th>
+    
+  </tr>
+
+
+  <tr>
+    <th>Driver</th>
+    <td>{{comparison.stack_info.previous_driver}}</td>
+    <td>{{comparison.stack_info.current_driver}}</td>
+    
+  </tr>
+  <tr>
+    <th>firmware</th>
+    <td>{{comparison.stack_info.previous_firmware}}</td>
+    <td>{{comparison.stack_info.current_firmware}}</td>
+    
+  </tr>
+  <tr>
+    <th>fw1</th>
+    <td>{{comparison.stack_info.previous_fw1}}</td>
+    <td>{{comparison.stack_info.current_fw1}}</td>
+    
+  </tr>
+  <tr>
+    <th>table</th>
+    <td>{{comparison.stack_info.previous_table}}</td>
+    <td>{{comparison.stack_info.current_table}}</td>
+    
+  </tr>
+
+</table>
+<br>
+
+<h4>Test Coverage and Results </h4>
+<table id="example" class="table table-sm display table-bordered" style="width:auto">
+  <tr class="set_header">
+    <th>Test Cases</th>
+    <th><center>Previous<br>Result</center></th>
+    <th><center>Current<br>Result</center></th>
+    <th><center>Failure<br>Ratio</center></th>
+    <th><center>Failure<br>Rate</center></th>
+  </tr>
+{% for item  in comparison.test_case_info.data %}
+  <tr>
+    <td style="min-width:100px;">{{comparison.test_case_info.data[item].test_case}}</td>
+    {% if comparison.test_case_info.data[item].previous_fail_count > 0 %}
+    <td style="min-width:100px;color:rgb(255, 25, 25);"><center><strong>FAIL</strong></center></td>
+    {% elif comparison.test_case_info.data[item].previous_fail_count < 0 %}
+    <td style="min-width:100px;color:darkgray;"><center><strong>NOT RUN</strong></center></td>
+    {% else %}
+    <td style="min-width:100px;color:rgb(2, 116, 0);"><center><strong>PASS</strong></center></td>
+    {% endif %}
+    
+    
+    {% if comparison.test_case_info.data[item].current_fail_count > 0 %}
+    <td style="min-width:100px;color:rgb(255, 25, 25);"><center><strong>FAIL</strong></center></td>
+    <td style="min-width:100px;"><center>{{comparison.test_case_info.data[item].current_fail_count}}/{{comparison.test_case_info.data[item].total_test_count}}</center></td>
+    <td style="min-width:100px;background-color:rgba(252, 92, 92,{{comparison.test_case_info.data[item].fail_rate/100}});"><center>{{comparison.test_case_info.data[item].fail_rate}}%</center></td>
+
+    {% else %}
+    <td style="min-width:100px;color:rgb(2, 116, 0);"><center><strong>PASS</strong></center></td>
+    <td style="min-width:100px;"><center>{{comparison.test_case_info.data[item].current_fail_count}}/{{comparison.test_case_info.data[item].total_test_count}}</center></td>
+    <td style="min-width:100px;"><center></center></td>
+    {% endif%}
+
+  </tr>
+{% endfor %}
+</table>
+<br><br>
+
+<h4>firmware Information</h4>
+<table id="example" class="table table-sm display table-bordered" style="width:auto">
+  <tr class="set_header">
+    <th>Component</th>
+    <th><center>Current <br>({{comparison.stack_info.current_firmware_nickname}})</center></th>
+    <th><center>Previous <br>({{comparison.stack_info.previous_firmware_nickname}})</center></th>
+  </tr>
+{% for item  in comparison.firmware_comparison.data %}
+  <tr>
+    <td style="min-width:300px;">{{item}}</td>
+    {% if comparison.firmware_comparison.data[item].previous == ""%}
+    <td style="min-width:150px;"><center>{{comparison.firmware_comparison.data[item].current}}</center></td>
+    <td style="min-width:150px;"><center>{{comparison.firmware_comparison.data[item].previous}}</center></td>
+  {% else%}
+  <td style="min-width:150px;background-color:yellow;" ><center>{{comparison.firmware_comparison.data[item].current}}</center></td>
+    <td style="min-width:150px;background-color:yellow;" ><center>{{comparison.firmware_comparison.data[item].previous}}</center></td>
+  {% endif %}
+    
+  </tr>
+{% endfor %}
+</table>
+<br>
+<h3>UCODE Information</h3>
+<table id="example" class="table table-sm display table-bordered" style="width:auto">
+  <tr class="set_header">
+    <th>Component</th>
+    <th><center>Current</center></th>
+    <th><center>Previous</center></th>
+  </tr>
+{% for item  in comparison.driver_comparison.data %}
+  <tr>
+    <td style="min-width:300px;">{{item}}</td>
+
+    {% if comparison.driver_comparison.data[item].previous == ""%}
+    <td style="min-width:150px;"><center>{{comparison.driver_comparison.data[item].current}}</center></td>
+    <td style="min-width:150px;"><center>{{comparison.driver_comparison.data[item].previous}}</center></td>
+    {% else%}
+    <td style="min-width:150px;background-color:yellow;" ><center>{{comparison.driver_comparison.data[item].current}}</center></td>
+    <td style="min-width:150px;background-color:yellow;" ><center>{{comparison.driver_comparison.data[item].previous}}</center></td>
+    {% endif %}
+    
+  </tr>
+{% endfor %}
+</table>
+<br>
+<h4>Platform Systems Information</h4>
+<table id="example" class="table table-sm display table-bordered" style="width:auto">
+  
+  <tr class="set_header">
+    <th>Config Type</th>
+    <th>CPU</th>
+    <th>Motherboard</th>
+    <th>SUT ID</th>
+    <th>firmware Post Time (ms)</th>
+  </tr>
+{% for item  in comparison.current_computers.data %}
+<tr>
+  {% if "I+A" in comparison.current_computers.data[item].type %}
+  <td style="background-color:rgb(220, 220, 220);">{{comparison.current_computers.data[item].type}}</td>
+  <td style="background-color:rgb(220, 220, 220);">{{comparison.current_computers.data[item].cpu}}</td>
+  <td style="background-color:rgb(220, 220, 220);">{{comparison.current_computers.data[item].motherboard}}</td>
+  <td style="background-color:rgb(220, 220, 220);">{{comparison.current_computers.data[item].computer_name}}</td>
+  <td style="background-color:rgb(220, 220, 220);">{{comparison.current_computers.data[item].min_fw_post_time}}</td>
+  {% else %}
+  <td >{{comparison.current_computers.data[item].type}}</td>
+  <td >{{comparison.current_computers.data[item].cpu}}</td>
+  <td >{{comparison.current_computers.data[item].motherboard}}</td>
+  <td >{{comparison.current_computers.data[item].computer_name}}</td>
+  <td >{{comparison.current_computers.data[item].min_fw_post_time}}</td>
+  {% endif %}
+  </tr>
+{% endfor %}
+</table>
+</div>
+<!--br>
+{{comparison.driver_comparison}}
+<br>
+{{comparison.current_computers}}
+<br-->
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

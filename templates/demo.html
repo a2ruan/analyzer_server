@@ -1,0 +1,345 @@
+{% extends "bootstrap_base.html" %}
+
+{% block content %}
+
+
+
+{% if result['status'] == "pass"%}
+{% if result['warning'] == True %}
+<div class="progress">
+  <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" id="progressbar" role="progressbar"
+    aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;color:gray"><a>Test Report Generated in
+      {{elapsed_time}}s from {{dir_size}} MB of {{cached_indicator}} data ({{cachel2}})</a></div>
+
+</div>
+{% else %}
+<div class="progress">
+  <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="progressbar" role="progressbar"
+    aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Test Report Generated in
+    {{elapsed_time}}s from {{dir_size}} MB of {{cached_indicator}} data ({{cachel2}})
+
+
+  </div>
+</div>
+{% endif %}
+{% elif result['status'] == "fail"%}
+<div class="progress">
+  <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" id="progressbar" role="progressbar"
+    aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Test Report Generated in
+    {{elapsed_time}}s from {{dir_size}} MB of {{cached_indicator}} data ({{cachel2}})</div>
+</div>
+{% endif %}
+
+<br>
+
+<div class="row throttle" id="fadein1">
+
+  <div class="col-4 affix">
+    <div id="list-example" class="list-group ">
+      <a class="list-group-item list-group-item-action" href="#list-item-1">Results</a>
+      <a class="list-group-item list-group-item-action" href="#list-item-2">Test Details</a>
+      <a class="list-group-item list-group-item-action" href="#list-item-3">System Setup</a>
+      <a class="list-group-item list-group-item-action" href="#list-item-4">firmware SKU Profile</a>
+      <a class="list-group-item list-group-item-action" href="#list-item-5">firmware device Components</a>
+      <a class="list-group-item list-group-item-action" href="#list-item-6">PM Log</a>
+    </div>
+
+  </div>
+  <div class="col-8 throttle" id="fadein1">
+    <h3 class="inline" id="fadein1">Test Report Result: </h3>
+
+    
+
+    {% if result['status'] == "pass"%}
+    {% if result['warning'] == True %}
+
+    
+
+    <h3 class="inline"><span class="badge bg-warning">
+        <kk data-bs-toggle="tooltip"
+          title="Conditional pass indicates that a non-critical unit test failed i.e USB, PM log missing">CONDITIONAL
+          PASS<font size="1"><span class="badge bg-light rounded-pill"></span></font>
+        </kk>
+      </span></h3>
+    {% else %}
+    <h3 class="inline"><span class="badge bg-success">{{result['status'].upper()}}</span></h3>
+    {% endif %}
+    {% elif result['status'] == "fail"%}
+    <h3 class="inline"><span class="badge bg-danger">{{result['status'].upper()}}</span></h3>
+    {% else %}
+    <h3 class="inline"><span class="badge bg-primary">{{result['status']}}</span></h3>
+    {% endif %}
+    <br>{{test_details.test_case}}
+    <br><br>
+
+    {% if result['status'] == "MISMATCH DETECTED"%}
+    <div class="alert alert-danger" role="alert">
+      There is a potential mismatch detected.  This means the program database reported a failing test case, but the analyzer reports a pass or conditional pass.  This indicates there are missing unit test cases for detecting this test failure.
+      An incident report has been logged. 
+    </div>
+    <br>
+    {% endif %}
+
+    <div class="card" id="fadein2">
+      <div class="card-body">
+
+        <!--
+        <button type="button" onclick="location.href='http://localhost.program.com:5600/api/make_report/uuid/{{test_details.uuid}}'" class="btn btn-primary">Regenerate Report</button>
+        -->
+        <div class='row g-0'>
+          Notice: Analysis server is under development, results may be inaccurate.
+          <div class='col-md-5 w-auto ms-auto'>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" title="Repulls data from dir and re-run report"
+                onclick="location.href='http://localhost.program.com:5600/api/make_report/uuid/{{test_details.uuid}}'">Regenerate
+                Report</button>
+              <button type="button" class="btn btn-primary active dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+              </button>
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" title="Repulls data from dir and re-run report" href="#"
+                    onclick="location.href='http://localhost.program.com:5600/api/make_report/uuid/{{test_details.uuid}}'">Regenerate
+                    Report</a></li>
+                <li><a class="dropdown-item" href="http://localhost.program.com:5600/api/reports-list">View Available Reports</a>
+                </li>
+                <li><a class="dropdown-item" href="javascript:window.location.reload(true)">Refresh Page</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item disabled" href="#">Clear Report Cache</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+
+    <!--div class="alert alert-success" role="alert">
+      Notice: Test Report server is currently under development, results will be inaccurate. Test Report Generated in
+      {{elapsed_time}}s from {{dir_size}} MB of {{cached_indicator}} data
+
+      <br><br>
+      <div class="btn-group" role="group" aria-label="Bdevice outlined example">
+        <button type="button" onclick="location.href='http://localhost.program.com:5600/api/make_report/uuid/{{test_details.uuid}}'" class="btn btn-success">Regenerate Report</button>
+      </div>
+    </div!-->
+    <br>
+    <div id="fadein2" data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true"
+      class="scrollspy-example" tabindex="0">
+      <h4 id="list-item-1">Unit Test Checks</h4>
+      <table id="example" class="table display table-striped" style="width:auto">
+        {% for item in result.items() %}
+        <tr>
+          {% if item[0] in descriptions %}
+          <th>
+            <kk data-bs-toggle="tooltip" title="{{descriptions[item[0]]}}">{{item[0]}} <font size="1"><span
+                  class="badge bg-secondary rounded-pill">?</span></font>
+            </kk>
+          </th>
+          {% else %}
+          <th>{{item[0]}}</th>
+          {% endif %}
+
+          {% if item[1] == "pass"%}
+          <td><span class="badge bg-success inline">PASS</span></td>
+          {% elif item[1] == "fail" %}
+          <td><span class="badge bg-danger inline">FAIL</span></td>
+          {% elif item[1] == True %}
+          <td><span class="badge bg-danger inline">TRUE</span></td>
+          {% elif item[1] == False %}
+          <td><span class="badge bg-success inline">FALSE</span></td>
+          {% else %}
+          <td>{{item[1]}}</td>
+          {% endif %}
+
+        </tr>
+        {% endfor %}
+
+      </table>
+      <br><br>
+      <h4 id="list-item-2">Test Details</h4>
+      <table id="example" class="table display table-striped" style="width:100%">
+        {% for item in test_details.items() %}
+        <tr>
+          {% if item[0] in descriptions %}
+          <th>
+            <kk data-bs-toggle="tooltip" title="{{descriptions[item[0]]}}">{{item[0]}} <font size="1"><span
+                  class="badge bg-secondary rounded-pill">?</span></font>
+            </kk>
+          </th>
+          {% else %}
+          <th>{{item[0]}}</th>
+          {% endif %}
+
+
+          {% if item[0] == "status" %}
+
+          {% if item[1] == "pass"%}
+          <td><span class="badge bg-success inline">{{item[1].upper()}}</span></td>
+          {% else %}
+          <td><span class="badge bg-danger inline">{{item[1].upper()}}</span></td>
+          {% endif %}
+          {% else %}
+
+          <td>{{item[1]}}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+      <br><br>
+      <h4 id="list-item-3">System Setup</h4>
+      <table id="example" class="table display table-striped" style="width:100%">
+        {% for item in config_info.items() %}
+        <tr>
+          {% if item[0] in descriptions %}
+          <th>
+            <kk data-bs-toggle="tooltip" title="{{descriptions[item[0]]}}">{{item[0]}} <font size="1"><span
+                  class="badge bg-secondary rounded-pill">?</span></font>
+            </kk>
+          </th>
+          
+          {% else %}
+          <th>{{item[0]}}</th>
+          {% endif %}
+
+
+          {% if item[0] == "status" %}
+
+          {% if item[1] == "pass"%}
+          <td><span class="badge bg-success inline">{{item[1].upper()}}</span></td>
+          {% else %}
+          <td><span class="badge bg-danger inline">{{item[1].upper()}}</span></td>
+          {% endif %}
+          {% else %}
+
+          {% if item[0] == "program" %}
+          <th><a href="https://github.program.com/Gaming-Platform-Team/program/commit/{{item[1]}}">{{item[1]}}</a></th>
+          {% elif item[0] == "program_internal"%}
+          <th><a href="https://github.program.com/Gaming-Platform-Team/program/commit/{{item[1]}}">{{item[1]}}</a></th>
+          {%else%}
+          <td>{{item[1]}}</td>
+          {% endif %}
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+      <br><br>
+      <h4 id="list-item-4">firmware SKU Profile</h4>
+      <table id="example" class="table display table-striped" style="width:100%">
+        {% for item in firmware_info.items() %}
+        <tr>
+          {% if item[0] in descriptions %}
+          <th>
+            <kk data-bs-toggle="tooltip" title="{{descriptions[item[0]]}}">{{item[0]}} <font size="1"><span
+                  class="badge bg-secondary rounded-pill">?</span></font>
+            </kk>
+          </th>
+          {% else %}
+          <th>{{item[0]}}</th>
+          {% endif %}
+
+
+          {% if item[0] == "status" %}
+
+          {% if item[1] == "pass"%}
+          <td><span class="badge bg-success inline">{{item[1].upper()}}</span></td>
+          {% else %}
+          <td><span class="badge bg-danger inline">{{item[1].upper()}}</span></td>
+          {% endif %}
+          {% else %}
+
+          <td>{{item[1]}}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+      
+      <br><br>
+      <h4 id="list-item-5">firmware device Components</h4>
+      <table id="table" class="table display table-striped" style="width:100%">
+
+        <tr>
+          
+            <th>Name</th>
+            <th>FW ID</th>
+            <th>Version</th>
+            <th>Binary File</th>
+          
+        </tr>
+        {% for item in fw_components.items() %}
+        <tr>
+          <td><a href="https://firmwarebuilder.program.com/Firmware/{{item[1].upload_id}}">{{item[0]}}</a></td>
+          <td>{{item[1].fw_id}}</td>
+          <td>{{item[1].image_version}}</td>
+          <td><a href={{item[1].loc}}><button class="btn btn-success btn-sm">Download (.sbin)</button></a></td>
+          <!--td>{{item[1]}}</td!-->
+          
+        </tr>
+        {% endfor %}
+      </table>
+      <br><br>
+
+      <br><br>
+      <h4 id="list-item-6">PM Log Analysis</h4>
+      <table id="example" class="table display table-striped" style="width:100%">
+        {% for item in pm_log_stats.items() %}
+        <tr>
+          {% if item[0] in descriptions %}
+          <th>
+            <kk data-bs-toggle="tooltip" title="{{descriptions[item[0]]}}">{{item[0]}} <font size="1"><span
+                  class="badge bg-secondary rounded-pill">?</span></font>
+            </kk>
+          </th>
+          {% else %}
+          <th>{{item[0]}}</th>
+          {% endif %}
+
+
+          {% if item[0] == "status" %}
+
+          {% if item[1] == "pass"%}
+          <td><span class="badge bg-success inline">{{item[1].upper()}}</span></td>
+          {% else %}
+          <td><span class="badge bg-danger inline">{{item[1].upper()}}</span></td>
+          {% endif %}
+          {% else %}
+
+          <td>{{item[1]}}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+      <br><br>
+
+
+    </div>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+  document.getElementById('searchbox').value = "{{test_details.uuid}}";
+  setTimeout(() => {
+    document.getElementById("progressbar").classList.remove('progress-bar-animated');
+    document.getElementById("progressbar").classList.remove('progress-bar-striped');
+  }
+    , 2000);
+
+  setTimeout(() => {
+    document.getElementById("progressbar").innerHTML = "";
+  }
+    , 100000);
+</script>
+
+{% endblock %}

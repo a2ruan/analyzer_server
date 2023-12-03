@@ -1,0 +1,98 @@
+{% extends "bootstrap_base.html" %}
+
+{% block content %}
+
+<script>
+
+  function generate_report() {
+    var uuid_current = document.getElementById('uuid_current').value;
+    var uuid_previous = document.getElementById('uuid_previous').value;
+
+    console.log(uuid_current)
+    console.log(uuid_previous)
+
+    if (uuid_current != "" && uuid_previous != "")
+    {
+      window.location.href = 'http://localhost:5600/api/compare/' + uuid_previous + "/" + uuid_current;
+    }
+  }
+
+</script>
+
+<div class="row throttle" id="fadein1">
+
+  <div class="col-8 throttle" id="fadein1">
+    <br>
+    <h3 class="inline" id="fadein1">Generate Comparison Report: </h3><br><br>
+
+    
+    <div class="card" id="fadein2">
+      <div class="card-body">
+
+        <div class='row g-0'>
+          To generate a report, please enter the previous stack and current stack uuid (i.e cd64aab2-6cb6-44c7-8a65-d8746caaec83)
+          <br>Then click on the generate comparison report button.
+          
+          <form>
+            <br>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Previous Stack UUID</label>
+              <input type="text" class="form-control" id="uuid_previous" aria-describedby="emailHelp" placeholder="Enter Previous Stack UUID">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Current Stack UUID</label>
+              <input type="text" class="form-control" id="uuid_current" placeholder="Enter Current Stack UUID">
+            </div>
+          </form>
+          
+          
+          <div class='col-md-5 w-auto ms-auto'>
+            <br><br>
+            <a href="http://localhost:5600/api/compare/c87533c8-22d5-4ba6-99e6-d0279dc5410d/3d1dc9ea-5c60-4b29-b0f2-fb1a486cd7e1"><button type="button" class="btn btn-success" title="Demo">Demo1</button></a>
+            <a href="http://localhost:5600/api/compare/cb4c1779-78c7-4194-907b-f38b3a5c1744/d86b3998-96ff-4e5a-bc7b-1b664dbeab73"><button type="button" class="btn btn-success" title="Demo">Demo2</button></a>
+            <a href="http://localhost:5600/api/compare/b2501ce8-59d5-45df-88e9-e22fb8eb483d/725069b0-3a7f-4b43-aa35-3cb0f4bc3984"><button type="button" class="btn btn-success" title="Demo">Demo3</button></a>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" title="Generate comparison report based on two uuids"
+                onclick="generate_report();">Generate Comparison Report</button>
+              <button type="button" class="btn btn-primary active dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="http://localhost.program.com:5600/api/reports-list">View Available Reports</a>
+                </li>
+                <li><a class="dropdown-item" href="javascript:window.location.reload(true)">Refresh Page</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item disabled" href="#">Clear Report Cache</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+  </div>
+  <br><br>
+<iframe
+    src="http://localhost:3000/public/dashboard/cd64aab2-6cb6-44c7-8a65-d8746caaec83"
+    frameborder="0"
+    width="1600"
+    height="1200"
+    allowtransparency
+></iframe>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+</script>
+
+{% endblock %}
